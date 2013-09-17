@@ -1,4 +1,4 @@
-package com.pduda.jerseyjetty;
+package com.pduda.timeexpert;
 
 import java.text.SimpleDateFormat;
 import javax.ws.rs.GET;
@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 @Path("gmt")
 public class GmtTimeResource {
+
     private final Clock clock;
 
     public GmtTimeResource(Clock clock) {
@@ -18,6 +19,12 @@ public class GmtTimeResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String getStatus() {
         return String.format("It's currently %s GMT", now());
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public String getStatusWildcard() {
+        return String.format("It'z currently %s GMT", now());
     }
 
     private String now() {

@@ -1,4 +1,4 @@
-package com.pduda.jerseyjetty;
+package com.pduda.timeexpert;
 
 import java.util.Date;
 

@@ -1,19 +1,12 @@
-package com.pduda.jerseyjetty;
+package com.pduda.timeexpert;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.ws.rs.client.Client;
 import static javax.ws.rs.client.ClientBuilder.newClient;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.servlet.ServletContainer;
 import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -22,13 +15,13 @@ import org.junit.Before;
 public class GmtTimeAcceptanceTest {
 
     private String actualApplicationStatus;
-    private TimeExpert timeExpert;
+    private TimeExpertServer timeExpert;
     private FixedClock clock;
 
     @Before
     public void startApplication() {
         clock = new FixedClock();
-        timeExpert = new TimeExpert(clock);
+        timeExpert = new TimeExpertServer(clock);
         timeExpert.start();
     }
 
@@ -58,8 +51,7 @@ public class GmtTimeAcceptanceTest {
     }
 
     private String checkCurrentApplicationStatus() {
-        Client client = newClient();
-        WebTarget target = client.target("http://localhost:6666").path("gmt");
+        WebTarget target = newClient().target("http://localhost:6666").path("gmt");
         Response response = target.request(MediaType.TEXT_PLAIN).get();
         return response.readEntity(String.class);
     }
