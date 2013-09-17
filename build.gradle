@@ -1,5 +1,10 @@
 apply plugin: 'java'
 
+repositories {
+    mavenLocal()
+    mavenRepo url: "http://repo.maven.apache.org/maven2"
+}
+
 dependencies {
     compile 'org.glassfish.jersey:project:2.2'
     compile 'org.eclipse.jetty:jetty-server:9.0.5.v20130815'
