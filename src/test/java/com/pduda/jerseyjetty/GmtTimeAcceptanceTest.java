@@ -1,5 +1,9 @@
 package com.pduda.jerseyjetty;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.ws.rs.client.Client;
 import static javax.ws.rs.client.ClientBuilder.newClient;
 import javax.ws.rs.client.WebTarget;
@@ -19,10 +23,12 @@ public class GmtTimeAcceptanceTest {
 
     private String actualApplicationStatus;
     private TimeExpert timeExpert;
+    private FixedClock clock;
 
     @Before
     public void startApplication() {
-        timeExpert = new TimeExpert();
+        clock = new FixedClock();
+        timeExpert = new TimeExpert(clock);
         timeExpert.start();
     }
 
@@ -32,13 +38,15 @@ public class GmtTimeAcceptanceTest {
     }
 
     @Test
-    public void saysGoodEveningWithTheCurrentTime() {
+    public void saysGoodEveningWithTheCurrentTime() throws Exception {
         givenTheCurrentGmtTimeIs("20:15");
         whenUserChecksTheGmtTime();
         thenTheUserSees("It's currently 20:15 GMT");
     }
 
-    private void givenTheCurrentGmtTimeIs(String currentGmtTime) {
+    private void givenTheCurrentGmtTimeIs(String currentGmtTime) throws ParseException {
+        Date currentTimeAsDate = new SimpleDateFormat("HH:mm").parse(currentGmtTime);
+        clock.setNow(currentTimeAsDate);
     }
 
     private void whenUserChecksTheGmtTime() {
@@ -54,38 +62,5 @@ public class GmtTimeAcceptanceTest {
         WebTarget target = client.target("http://localhost:6666").path("gmt");
         Response response = target.request(MediaType.TEXT_PLAIN).get();
         return response.readEntity(String.class);
-    }
-
-    public static class TimeExpert {
-
-        private Server server;
-
-        private void start() {
-            server = new Server(6666);
-            ServletContextHandler handler = new ServletContextHandler();
-            handler.setContextPath("/");
-            handler.addServlet(new ServletHolder(new ServletContainer(resourceConfig())), "/*");
-            server.setHandler(handler);
-
-            try {
-                server.start();
-//                server.join();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void stop() {
-            try {
-                server.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        private ResourceConfig resourceConfig() {
-            return new ResourceConfig()
-                    .register(new GmtTimeResource());
-        }
     }
 }
