@@ -1,5 +1,11 @@
 apply plugin: 'java'
 
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
 repositories {
     mavenLocal()
     mavenRepo url: "http://repo.maven.apache.org/maven2"
