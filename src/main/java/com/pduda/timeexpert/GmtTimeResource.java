@@ -21,12 +21,6 @@ public class GmtTimeResource {
         return String.format("It's currently %s GMT", now());
     }
 
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    public String getStatusWildcard() {
-        return String.format("It'z currently %s GMT", now());
-    }
-
     private String now() {
         return new SimpleDateFormat("HH:mm").format(clock.now());
     }

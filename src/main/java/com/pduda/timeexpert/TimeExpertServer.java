@@ -19,6 +19,7 @@ public class TimeExpertServer {
         server = new Server(6666);
         ServletContextHandler handler = new ServletContextHandler();
         handler.setContextPath("");
+        // adds Jersey Servlet with a customized ResourceConfig
         handler.addServlet(new ServletHolder(new ServletContainer(resourceConfig())), "/*");
         server.setHandler(handler);
         try {
@@ -29,6 +30,7 @@ public class TimeExpertServer {
     }
 
     private ResourceConfig resourceConfig() {
+        // manually injecting dependencies (clock) to Jersey resource classes
         return new ResourceConfig().register(new GmtTimeResource(clock));
     }
 
