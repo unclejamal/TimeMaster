@@ -14,15 +14,18 @@ import org.junit.Before;
 
 public class GmtTimeAcceptanceTest {
 
-    private String actualApplicationStatus;
+    private String actualApplicationGmtTime;
     private TimeExpertServer timeExpert;
     private FixedClock clock;
+    private TimeExpertUser timeExpertUser;
 
     @Before
     public void startApplication() {
         clock = new FixedClock();
         timeExpert = new TimeExpertServer(clock);
         timeExpert.start();
+        
+        timeExpertUser = new TimeExpertUser();
     }
 
     @After
@@ -33,7 +36,7 @@ public class GmtTimeAcceptanceTest {
     @Test
     public void saysGoodEveningWithTheCurrentTime() throws Exception {
         givenTheCurrentGmtTimeIs("20:15");
-        whenUserChecksTheGmtTime();
+        whenAUserChecksTheGmtTime();
         thenTheUserSees("It's currently 20:15 GMT");
     }
 
@@ -42,17 +45,21 @@ public class GmtTimeAcceptanceTest {
         clock.setNow(currentTimeAsDate);
     }
 
-    private void whenUserChecksTheGmtTime() {
-        actualApplicationStatus = checkCurrentApplicationStatus();
+    private void whenAUserChecksTheGmtTime() {
+        actualApplicationGmtTime = timeExpertUser.checkCurrentGmtTime();
     }
 
-    private void thenTheUserSees(String expectedApplicationStatus) {
-        assertEquals(expectedApplicationStatus, actualApplicationStatus);
+    private void thenTheUserSees(String expectedApplicationGmtTime) {
+        assertEquals(expectedApplicationGmtTime, actualApplicationGmtTime);
     }
+    
+    private static class TimeExpertUser {
 
-    private String checkCurrentApplicationStatus() {
-        WebTarget target = newClient().target("http://localhost:6666").path("gmt");
-        Response response = target.request(MediaType.TEXT_PLAIN).get();
-        return response.readEntity(String.class);
+        public String checkCurrentGmtTime() {
+            WebTarget target = newClient().target("http://localhost:6666").path("gmt");
+            Response response = target.request(MediaType.TEXT_PLAIN).get();
+            return response.readEntity(String.class);
+        }
+        
     }
 }
