@@ -7,7 +7,7 @@ public class Main {
     }
 
     private void startTimeExpert() {
-        final TimeExpertServer timeExpert = new TimeExpertServer(new SystemClock());
+        final TimeExpertServer timeExpert = new TimeExpertServer(new RealClock());
         try {
             timeExpert.start();
             timeExpert.join();

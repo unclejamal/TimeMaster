@@ -31,7 +31,7 @@ public class TimeExpertServer {
 
     private ResourceConfig resourceConfig() {
         // manually injecting dependencies (clock) to Jersey resource classes
-        return new ResourceConfig().register(new GmtTimeResource(clock));
+        return new ResourceConfig().register(new TimeResource(clock));
     }
 
     public void stop() {

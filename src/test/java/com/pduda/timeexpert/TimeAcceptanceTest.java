@@ -12,9 +12,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 
-public class GmtTimeAcceptanceTest {
+public class TimeAcceptanceTest {
 
-    private String actualApplicationGmtTime;
+    private String actualApplicationTime;
     private TimeExpertServer timeExpert;
     private FixedClock clock;
     private TimeExpertUser timeExpertUser;
@@ -24,7 +24,7 @@ public class GmtTimeAcceptanceTest {
         clock = new FixedClock();
         timeExpert = new TimeExpertServer(clock);
         timeExpert.start();
-        
+
         timeExpertUser = new TimeExpertUser();
     }
 
@@ -34,32 +34,31 @@ public class GmtTimeAcceptanceTest {
     }
 
     @Test
-    public void saysGoodEveningWithTheCurrentTime() throws Exception {
-        givenTheCurrentGmtTimeIs("20:15");
-        whenAUserChecksTheGmtTime();
-        thenTheUserSees("It's currently 20:15 GMT");
+    public void saysTheCurrentTime() throws Exception {
+        givenTheCurrentTimeIs("20:15");
+        whenAUserChecksTheTime();
+        thenTheUserSees("It's currently 20:15!");
     }
 
-    private void givenTheCurrentGmtTimeIs(String currentGmtTime) throws ParseException {
-        Date currentTimeAsDate = new SimpleDateFormat("HH:mm").parse(currentGmtTime);
+    private void givenTheCurrentTimeIs(String currentTime) throws ParseException {
+        Date currentTimeAsDate = new SimpleDateFormat("HH:mm").parse(currentTime);
         clock.setNow(currentTimeAsDate);
     }
 
-    private void whenAUserChecksTheGmtTime() {
-        actualApplicationGmtTime = timeExpertUser.checkCurrentGmtTime();
+    private void whenAUserChecksTheTime() {
+        actualApplicationTime = timeExpertUser.checkCurrentTime();
     }
 
-    private void thenTheUserSees(String expectedApplicationGmtTime) {
-        assertEquals(expectedApplicationGmtTime, actualApplicationGmtTime);
+    private void thenTheUserSees(String expectedApplicationTime) {
+        assertEquals(expectedApplicationTime, actualApplicationTime);
     }
-    
+
     private static class TimeExpertUser {
 
-        public String checkCurrentGmtTime() {
-            WebTarget target = newClient().target("http://localhost:6666").path("gmt");
+        public String checkCurrentTime() {
+            WebTarget target = newClient().target("http://localhost:6666").path("time");
             Response response = target.request(MediaType.TEXT_PLAIN).get();
             return response.readEntity(String.class);
         }
-        
     }
 }

@@ -2,7 +2,7 @@ package com.pduda.timeexpert;
 
 import java.util.Date;
 
-public class SystemClock implements Clock {
+public class RealClock implements Clock {
 
     @Override
     public Date now() {
