@@ -10,8 +10,7 @@ public class FixedClock implements Clock {
         return fixedNow;
     }
 
-    public void setNow(Date now) {
-        fixedNow = now;
+    public void setNow(Date fixedNow) {
+        this.fixedNow = fixedNow;
     }
-    
 }

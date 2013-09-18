@@ -8,5 +8,4 @@ public class RealClock implements Clock {
     public Date now() {
         return new Date();
     }
-
 }
